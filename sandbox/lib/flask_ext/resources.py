@@ -22,7 +22,7 @@ class __Action:
             if "<" not in t
         ]
 
-        return f"{'_'.join(tokens)}_{self.name}"
+        return f"{'_'.join(tokens)}.{self.name}"
 
 
 INDEX_ACTION = __Action(name="index", http_method="GET", is_member=False)

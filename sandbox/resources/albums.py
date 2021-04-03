@@ -25,7 +25,7 @@ def show(id):
         if album.id == id:
             return jsonify(album=album)
 
-    raise NotFound(description=f"Could not find album with id {id}")
+    raise NotFound(description=f"Could not find album with id {id}.")
 
 
 def create():
@@ -52,7 +52,7 @@ def update(id):
 
             return jsonify(album=album)
 
-    raise NotFound(description=f"Could not find album with id {id}")
+    raise NotFound(description=f"Could not find album with id {id}.")
 
 
 def delete(id):
@@ -70,5 +70,5 @@ def delete(id):
         response.mimetype = current_app.config['JSONIFY_MIMETYPE']
         return response
     else:
-        raise NotFound(description=f"Could not find album with id {id}")
+        raise NotFound(description=f"Could not find album with id {id}.")
 

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ "$1" == "help" ]]; then
+    echo "[ bin/setup ] Useful commands:"
+    echo "[ bin/setup ]"
+    echo "[ bin/setup ]   bin/setup help"
+    echo "[ bin/setup ]       # show this help"
+    echo "[ bin/setup ]"
+else
+    echo "[ bin/setup ] Ensuring latest pip"
+    pip install --upgrade pip
+    echo "[ bin/setup ]"
+
+    echo "[ bin/setup ] Installing dependencies"
+    pip check || pip install -r requirements-dev.txt
+    echo "[ bin/setup ]"
+
+    echo "[ bin/setup ] All set up."
+    echo "[ bin/setup ]"
+    echo "[ bin/setup ] To see commonly-needed commands, run:"
+    echo "[ bin/setup ]"
+    echo "[ bin/setup ]   bin/setup help"
+    echo "[ bin/setup ]"
+fi

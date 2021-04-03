@@ -16,3 +16,9 @@ Sandbox to play around with ideas on how to build sustainable Python web applica
 
 ## Tests and CI
 1. `bin/ci` contains all the tests and checks for the app
+
+
+## Database
+
+### Update `models.py`
+1. `bin/db-reflect`

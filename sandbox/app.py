@@ -1,9 +1,9 @@
-from flask import Flask, escape, request
+from flask import Flask
+
+from sandbox.lib import resources
+from sandbox.resources import health
+
 
 app = Flask(__name__)
 
-
-@app.route('/')
-def hello():
-    name = request.args.get("name", "World")
-    return f'Hello, {escape(name)}!'
+resources.register(app, "health", health)

@@ -20,5 +20,21 @@ Sandbox to play around with ideas on how to build sustainable Python web applica
 
 ## Database
 
+### Create a Migration Script
+1. [Create a migration](https://alembic.sqlalchemy.org/en/latest/tutorial.html#create-a-migration-script) 
+    ```bash
+    alembic revision -m "create albums table"
+    ```
+1. Fill in the `upgrade()` and `downgrade()` methods
+1. Apply the migration
+    ```bash
+    alembic upgrade head
+    ```
+
+To [revert](https://alembic.sqlalchemy.org/en/latest/tutorial.html#relative-migration-identifiers) the latest migration applied, run
+```bash
+alembic downgrade -1
+```
+
 ### Update `models.py`
 1. `bin/db-reflect`

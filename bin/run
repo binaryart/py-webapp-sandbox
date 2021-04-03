@@ -2,4 +2,6 @@
 
 set -e
 
-env FLASK_APP="sandbox/app.py:app" flask run
+export FLASK_ENV=development
+export FLASK_APP="sandbox/app.py:app"
+flask run

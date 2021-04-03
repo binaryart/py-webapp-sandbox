@@ -8,6 +8,12 @@ if [[ "$1" == "help" ]]; then
     echo "[ bin/setup ]   bin/run"
     echo "[ bin/setup ]       # run app locally"
     echo "[ bin/setup ]"
+    echo "[ bin/setup ]   bin/ci"
+    echo "[ bin/setup ]       # runs all tests and checks as CI would"
+    echo "[ bin/setup ]"
+    echo "[ bin/setup ]   pytest tests/end_to_end"
+    echo "[ bin/setup ]       # runs all end to end tests"
+    echo "[ bin/setup ]"
     echo "[ bin/setup ]   bin/setup help"
     echo "[ bin/setup ]       # show this help"
     echo "[ bin/setup ]"
@@ -17,7 +23,7 @@ else
     echo "[ bin/setup ]"
 
     echo "[ bin/setup ] Installing dependencies"
-    pip check || pip install -r requirements-dev.txt
+    pip install -r requirements-dev.txt
     echo "[ bin/setup ]"
 
     echo "[ bin/setup ] All set up."

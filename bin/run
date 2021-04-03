@@ -2,4 +2,4 @@
 
 set -e
 
-env FLASK_APP="app/flask.py:app" flask run
+env FLASK_APP="sandbox/app.py:app" flask run

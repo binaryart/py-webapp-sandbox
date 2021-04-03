@@ -13,3 +13,6 @@ Sandbox to play around with ideas on how to build sustainable Python web applica
 ## Running the app
 
 1. `bin/run`
+
+## Tests and CI
+1. `bin/ci` contains all the tests and checks for the app

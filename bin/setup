@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
+
 set -e
 
 if [[ "$1" == "help" ]]; then
     echo "[ bin/setup ] Useful commands:"
+    echo "[ bin/setup ]"
+    echo "[ bin/setup ]   bin/run"
+    echo "[ bin/setup ]       # run app locally"
     echo "[ bin/setup ]"
     echo "[ bin/setup ]   bin/setup help"
     echo "[ bin/setup ]       # show this help"

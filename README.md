@@ -8,5 +8,8 @@ Sandbox to play around with ideas on how to build sustainable Python web applica
     python3 -m venv .venv
     source .venv/bin/activate
     ```
-1. Run `bin/setup`
+1. `bin/setup`
 
+## Running the app
+
+1. `bin/run`

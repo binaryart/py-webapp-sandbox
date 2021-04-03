@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+env FLASK_APP="app/flask.py:app" flask run

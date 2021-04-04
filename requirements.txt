@@ -1,3 +1,5 @@
 alembic
 Flask
+pydantic
+pydantic-sqlalchemy
 SQLAlchemy

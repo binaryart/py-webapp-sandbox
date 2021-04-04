@@ -1,74 +1,57 @@
-from dataclasses import dataclass
 from flask import current_app, jsonify, make_response, request
 from werkzeug.exceptions import NotFound
 
-
-@dataclass
-class Album:
-    id: int
-    name: str
-    artist: str
-
-
-in_memory_albums = [
-    Album(id=1, name="Room for Squares", artist="John Mayer"),
-    Album(id=2, name="St. Elsewhere", artist="Gnarls Barkley"),
-]
+from sandbox.database import db_session
+from sandbox.models import Album
+from sandbox.serializers import serialize
 
 
 def index():
-    return jsonify(albums=in_memory_albums)
+    albums = db_session.query(Album).all()
+    return jsonify(albums=serialize(albums, as_list=True))
 
 
 def show(id):
-    for album in in_memory_albums:
-        if album.id == id:
-            return jsonify(album=album)
+    album = db_session.query(Album).filter_by(id=id).first()
+    if album:
+        return jsonify(album=serialize(album))
 
     raise NotFound(description=f"Could not find album with id {id}.")
 
 
 def create():
-    global in_memory_albums
-
     album_params = request.get_json()["album"]
-    album = Album(
-        id=len(in_memory_albums) + 1,
-        name=album_params["name"],
-        artist=album_params["artist"],
-    )
-    in_memory_albums.append(album)
 
-    return jsonify(album=album)
+    album = Album(**album_params)
+    db_session.add(album)
+    db_session.commit()
+
+    return jsonify(album=serialize(album))
 
 
 def update(id):
-    album_params = request.get_json()["album"]
+    album = db_session.query(Album).filter_by(id=id).first()
+    if album:
+        album_params = request.get_json()["album"]
+        for field, value in album_params.items():
+            if hasattr(album, field):
+                setattr(album, field, value)
 
-    for album in in_memory_albums:
-        if album.id == id:
-            album.name = album_params["name"]
-            album.artist = album_params["artist"]
+        db_session.commit()
 
-            return jsonify(album=album)
+        return jsonify(album=serialize(album))
 
     raise NotFound(description=f"Could not find album with id {id}.")
 
 
 def delete(id):
-    global in_memory_albums
-    new_in_memory_albums = [
-        album
-        for album in in_memory_albums
-        if album.id != id
-    ]
-
-    if len(new_in_memory_albums) != in_memory_albums:
-        in_memory_albums = new_in_memory_albums
+    album = db_session.query(Album).filter_by(id=id).first()
+    if album:
+        db_session.delete(album)
+        db_session.commit()
 
         response = make_response('', 204)
         response.mimetype = current_app.config['JSONIFY_MIMETYPE']
         return response
-    else:
-        raise NotFound(description=f"Could not find album with id {id}.")
 
+    raise NotFound(description=f"Could not find album with id {id}.")

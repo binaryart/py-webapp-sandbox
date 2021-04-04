@@ -2,21 +2,25 @@
 
 import io
 import os
+import sys
 
-from sqlalchemy import create_engine
 from sqlalchemy.schema import MetaData
 
+from dotenv import load_dotenv
+load_dotenv(".env.development")
 
-DATABASE_URL = "sqlite:////tmp/sandbox/development.db"
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(PROJECT_ROOT)
 
 
 def run():
-    engine = create_engine(DATABASE_URL)
+    from sandbox.database import engine
+
     metadata = MetaData(engine)
     metadata.reflect(bind=engine)
 
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    models_module = os.path.join(project_root, "sandbox", "models.py")
+    models_module = os.path.join(PROJECT_ROOT, "sandbox", "models.py")
 
     print("[ bin/db-reflect ]", "Updating database models definition.")
 
@@ -25,7 +29,7 @@ def run():
     from sqlacodegen.codegen import CodeGenerator
     CodeGenerator(metadata).render(outfile)
 
-    relative_models_path = models_module.replace(project_root, "")[1:]
+    relative_models_path = models_module.replace(PROJECT_ROOT, "")[1:]
     print("[ bin/db-reflect ]   ", relative_models_path, "is updated")
 
 

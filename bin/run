@@ -1,7 +1,21 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python
 
-set -e
+import os
+import sys
 
-export FLASK_ENV=development
-export FLASK_APP="sandbox/app.py:app"
-flask run
+from dotenv import load_dotenv
+load_dotenv(".env.development")
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(PROJECT_ROOT)
+
+
+def run():
+    from sandbox.app import create_app
+
+    app = create_app()
+    app.run()
+
+
+if __name__ == "__main__":
+    run()

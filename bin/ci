@@ -2,7 +2,11 @@
 
 set -e
 
-export FLASK_ENV=test
+# Load .env.test
+set -o allexport; source .env.test; set +o allexport
+
+echo "[ bin/ci ] Setting up the test database"
+alembic upgrade head
 
 echo "[ bin/ci ] Running end to end tests"
 pytest tests/end_to_end

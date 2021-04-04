@@ -109,14 +109,6 @@ ENV/
 env.bak/
 venv.bak/
 
-# The .env file is used for both dev and test
-# and creates more problems than it solves
-.env
-# .env.*.local files are where we put actual
-# secretes we need for dev and test, so
-# we really don't want this in version control
-.env.*.local
-
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -137,3 +129,15 @@ dmypy.json
 
 # IDE
 .idea/
+
+
+# The .env file is used for both dev and test
+# and creates more problems than it solves
+.env
+# .env.*.local files are where we put actual
+# secretes we need for dev and test, so
+# we really don't want this in version control
+.env.*.local
+
+# Ignore project tmp directory
+tmp/

@@ -25,8 +25,21 @@ else
     pip install --upgrade pip
     echo "[ bin/setup ]"
 
+
+    echo "[ bin/setup ] Loading .env.development"
+    set -o allexport; source .env.development; set +o allexport
+    echo "[ bin/setup ]"
+
+    echo "[ bin/setup ] Setting up project tmp folder"
+    mkdir -p tmp/database
+    echo "[ bin/setup ]"
+
     echo "[ bin/setup ] Installing dependencies"
     pip install -r requirements-dev.txt
+    echo "[ bin/setup ]"
+
+    echo "[ bin/setup ] Running database migrations"
+    alembic upgrade head
     echo "[ bin/setup ]"
 
     echo "[ bin/setup ] All set up."

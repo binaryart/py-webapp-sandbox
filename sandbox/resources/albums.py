@@ -37,8 +37,6 @@ def update(id):
             if hasattr(album, field):
                 setattr(album, field, value)
 
-        db_session.commit()
-
         return jsonify(album=serialize(album))
 
     raise NotFound(description=f"Could not find album with id {id}.")
@@ -48,7 +46,6 @@ def delete(id):
     album = db_session.query(Album).filter_by(id=id).first()
     if album:
         db_session.delete(album)
-        db_session.commit()
 
         response = make_response('', 204)
         response.mimetype = current_app.config['JSONIFY_MIMETYPE']

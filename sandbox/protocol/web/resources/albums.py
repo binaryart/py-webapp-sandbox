@@ -1,8 +1,8 @@
 from flask import current_app, jsonify, make_response, request
 from werkzeug.exceptions import NotFound
 
-from sandbox.persistence.database import db_session
-from sandbox.persistence.models import Album
+from sandbox.persistence.orm.database import db_session
+from sandbox.persistence.orm.models import Album
 from sandbox.protocol.web.serializers import serialize
 
 

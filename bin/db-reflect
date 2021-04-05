@@ -4,6 +4,7 @@ import io
 import os
 import sys
 
+from sqlacodegen.codegen import CodeGenerator
 from sqlalchemy.schema import MetaData
 
 from dotenv import load_dotenv
@@ -20,17 +21,38 @@ def run():
     metadata = MetaData(engine)
     metadata.reflect(bind=engine)
 
-    models_module = os.path.join(PROJECT_ROOT, "sandbox", "models.py")
+    models_module = os.path.join(PROJECT_ROOT, "sandbox", "persistence", "orm", "schema.py")
 
-    print("[ bin/db-reflect ]", "Updating database models definition.")
+    print("[ bin/db-reflect ]", "Updating schema definition.")
 
     outfile = io.open(models_module, "w", encoding="utf-8")
 
-    from sqlacodegen.codegen import CodeGenerator
-    CodeGenerator(metadata).render(outfile)
+    PatchedCodeGenerator(metadata, noclasses=True).render(outfile)
 
     relative_models_path = models_module.replace(PROJECT_ROOT, "")[1:]
     print("[ bin/db-reflect ]   ", relative_models_path, "is updated")
+
+
+class PatchedCodeGenerator(CodeGenerator):
+    """
+    According to SQLAlchemy 1.4, `mapper()` is deprecated.
+
+    https://docs.sqlalchemy.org/en/14/orm/mapping_styles.html#imperative-a-k-a-classical-mappings
+    """
+    def render_metadata_declarations(self):
+        if 'sqlalchemy.ext.declarative' in self.collector:
+            return 'Base = declarative_base()\nmetadata = Base.metadata'
+        return 'mapper_registry = registry()'
+
+    def render_table(self, model):
+        rendered = super().render_table(model)
+        return rendered.replace(', metadata,', ', mapper_registry.metadata,')
+
+    def render_imports(self):
+        if self.noclasses:
+            self.collector['sqlalchemy'].discard('MetaData')
+            self.collector.add_literal_import('sqlalchemy.orm', 'registry')
+        return super().render_imports()
 
 
 if __name__ == "__main__":

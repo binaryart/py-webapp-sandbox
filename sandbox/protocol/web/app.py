@@ -1,6 +1,6 @@
 from flask import Flask
 
-from sandbox.protocol.web.flask_hooks import database, errors, resources
+from sandbox.protocol.web.flask_hooks import errors, orm, resources
 from sandbox.protocol.web.resources import albums, album_songs, health
 
 
@@ -11,7 +11,7 @@ def create_app():
     errors.register_error_handler(app)
 
     # Initialize application
-    database.init(app)
+    orm.init(app)
 
     # Diagnostic endpoint(s)
     resources.register(app, "health", health)

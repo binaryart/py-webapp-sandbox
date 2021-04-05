@@ -1,7 +1,7 @@
+from sandbox.domain.models.album import Album
 from sandbox.domain.repositories.albums import AlbumRepository
 from sandbox.domain.repositories.errors import RecordNotFoundException
 from sandbox.persistence.orm.database import db_session
-from sandbox.persistence.orm.models import Album
 
 
 class SqlAlchemyAlbumRepository(AlbumRepository):

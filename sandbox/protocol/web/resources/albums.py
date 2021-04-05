@@ -1,9 +1,8 @@
 from flask import current_app, jsonify, make_response, request
 from werkzeug.exceptions import NotFound
 
+from sandbox.domain.models.album import Album
 from sandbox.domain.repositories.errors import RecordNotFoundException
-
-from sandbox.persistence.orm.models import Album
 from sandbox.persistence.orm.repositories.albums import SqlAlchemyAlbumRepository
 from sandbox.protocol.web.serializers import serialize
 

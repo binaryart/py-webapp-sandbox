@@ -36,5 +36,8 @@ To [revert](https://alembic.sqlalchemy.org/en/latest/tutorial.html#relative-migr
 alembic downgrade -1
 ```
 
-### Update `models.py`
-1. `bin/db-reflect`
+### Create models
+1. Add new domain model in the `sandbox.domain.models` module
+1. (Optional), if the domain model is backed by database
+    1. `bin/db-reflect` to update the schema
+    1. link the domain model with the database table in `sandbox.persistence.orm.database` module

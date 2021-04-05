@@ -1,111 +1,59 @@
-def test_albums(client):
-    # fresh database
+def test_should_get_created_album(client):
+    album_params = {"album": {"artist": "Noisettes", "name": "Wild Young Hearts"}}
+
+    # when: we create an album
+    rv = client.post("/albums", json=album_params)
+    album_id = rv.get_json()["album"]["id"]
+
+    # then: we should be able to read it back
+    rv = client.get(f"/albums/{album_id}")
+    album = rv.get_json()["album"]
+    assert album["artist"] == "Noisettes"
+    assert album["name"] == "Wild Young Hearts"
+
+
+def test_should_list_albums(client):
+    # given: we have two albums in system
+    client.post("/albums", json={"album": {"artist": "John Mayer", "name": "Room for Squares"}})
+    client.post("/albums", json={"album": {"artist": "Gnarls Barkley", "name": "St. Elsewhere"}})
+
+    # when: we ask for all albums
     rv = client.get("/albums")
 
-    assert rv.status_code == 200
-    assert len(rv.get_json()["albums"]) == 0
+    # then: system returns the albums we have added
+    albums = rv.get_json()["albums"]
+    assert len(albums) == 2
+    assert albums[0]["id"] == 1
+    assert albums[0]["artist"] == "John Mayer"
+    assert albums[0]["name"] == "Room for Squares"
+    assert albums[1]["id"] == 2
+    assert albums[1]["artist"] == "Gnarls Barkley"
+    assert albums[1]["name"] == "St. Elsewhere"
 
-    # create albums
-    rv = client.post("/albums", json={"album": {"artist": "John Mayer", "name": "Room for Squares"}})
 
-    assert rv.status_code == 200
-    room_for_squares = rv.get_json()
-    assert room_for_squares["album"]["id"] == 1
-    assert room_for_squares["album"]["artist"] == "John Mayer"
-    assert room_for_squares["album"]["name"] == "Room for Squares"
-
-    rv = client.post("/albums", json={"album": {"artist": "Gnarls Barkley", "name": "St. Elsewhere"}})
-
-    assert rv.status_code == 200
-    st_elsewhere = rv.get_json()
-    assert st_elsewhere["album"]["id"] == 2
-    assert st_elsewhere["album"]["artist"] == "Gnarls Barkley"
-    assert st_elsewhere["album"]["name"] == "St. Elsewhere"
-
+def test_should_get_updated_album(client):
+    # given: we created an album
     rv = client.post("/albums", json={"album": {"artist": "Noisettes", "name": "Wild Young Hearts"}})
+    album_id = rv.get_json()["album"]["id"]
+
+    # when: we update the album
+    client.put(f"/albums/{album_id}", json={"album": {"artist": "Noisettes", "name": "What's the Time Mr Wolf?"}})
+
+    # then: we should see updated album
+    rv = client.get(f"/albums/{album_id}")
+    album = rv.get_json()["album"]
     assert rv.status_code == 200
-    wild_young_heart = rv.get_json()
-    assert wild_young_heart["album"]["id"] == 3
-    assert wild_young_heart["album"]["artist"] == "Noisettes"
-    assert wild_young_heart["album"]["name"] == "Wild Young Hearts"
-
-    # after creating entries
-    rv = client.get("/albums")
-
-    assert rv.status_code == 200
-    assert len(rv.get_json()["albums"]) == 3
-
-    # can read details of an album
-    rv = client.get("/albums/1")
-
-    assert rv.status_code == 200
-    assert rv.get_json() == room_for_squares
-
-    # update an album
-    rv = client.put("/albums/3", json={"album": {"artist": "Noisettes", "name": "What's the Time Mr Wolf?"}})
-
-    assert rv.status_code == 200
-    whats_the_time_mr_wolf = rv.get_json()
-    assert whats_the_time_mr_wolf["album"]["id"] == 3
-    assert whats_the_time_mr_wolf["album"]["artist"] == "Noisettes"
-    assert whats_the_time_mr_wolf["album"]["name"] == "What's the Time Mr Wolf?"
-
-    # delete an album
-    rv = client.delete("/albums/1")
-
-    assert rv.status_code == 204
-    assert client.get("/albums/1").status_code == 404
-    assert len(client.get("/albums").get_json()["albums"]) == 2
-
-    # cannot delete deleted album
-    rv = client.put("/albums/1", json={"album": {"artist": "John Mayer", "name": "Room for Squares"}})
-
-    assert rv.status_code == 404
+    assert album["artist"] == "Noisettes"
+    assert album["name"] == "What's the Time Mr Wolf?"
 
 
-#
-#
-# def test_show(client):
-#     rv = client.get("/albums/1")
-#
-#     assert rv.status_code == 200
-#
-#     json_data = rv.get_json()
-#     assert json_data["album"]["id"] == 1
-#     assert json_data["album"]["artist"] == "John Mayer"
-#     assert json_data["album"]["name"] == "Room for Squares"
+def test_should_delete_album(client):
+    # given: we have an album
+    rv = client.post("/albums", json={"album": {"artist": "John Mayer", "name": "Room for Squares"}})
+    album_id = rv.get_json()["album"]["id"]
 
+    # when: we delete the album
+    client.delete(f"/albums/{album_id}")
 
-# def test_create(client):
-#     rv = client.get("/albums")
-#     pre_albums_count = len(rv.get_json()["albums"])
-#
-#     rv = client.post("/albums", json={"album": {"artist": "Noisettes", "name": "Wild Young Hearts"}})
-#
-#     assert rv.status_code == 200
-#
-#     json_data = rv.get_json()
-#     assert json_data["album"]["id"]
-#     assert json_data["album"]["artist"] == "Noisettes"
-#     assert json_data["album"]["name"] == "Wild Young Hearts"
-#
-#     rv = client.get("/albums")
-#     assert len(rv.get_json()["albums"]) == pre_albums_count + 1
-#
-#
-# def test_update(client):
-#     rv = client.put("/albums/1", json={"album": {"artist": "Noisettes", "name": "What's the Time Mr Wolf?"}})
-#
-#     assert rv.status_code == 200
-#
-#     json_data = rv.get_json()
-#     assert json_data["album"]["id"] == 1
-#     assert json_data["album"]["artist"] == "Noisettes"
-#     assert json_data["album"]["name"] == "What's the Time Mr Wolf?"
-#
-#
-# def test_delete(client):
-#     rv = client.delete("/albums/1")
-#
-#     assert rv.status_code == 204
-#     assert client.get("/albums/1").status_code == 404
+    # then: we should not be able to access the album
+    assert client.get(f"/albums/{album_id}").status_code == 404

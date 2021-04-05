@@ -1,19 +1,17 @@
 import os
 import shutil
-import tempfile
 
 import pytest
 from dotenv import load_dotenv
+from tests import PROJECT_ROOT
 
 # Load test specific environment variables
-load_dotenv("../.env.test")
-
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+load_dotenv(os.path.join(PROJECT_ROOT, ".env.test"))
 
 
 @pytest.fixture
 def client():
-    db_fd, db_path = __new_test_database()
+    db_path = __create_test_database()
     os.environ["DATABASE_URL"] = f"sqlite:///{db_path}"
 
     from sandbox.app import create_app
@@ -22,16 +20,12 @@ def client():
     with app.test_client() as client:
         yield client
 
-    try:
-        os.unlink(db_path)
-    finally:
-        os.close(db_fd)
+    os.unlink(db_path)
 
 
-def __new_test_database():
-    db_fd, db_path = tempfile.mkstemp()
-
-    template_db = os.path.join(PROJECT_ROOT, os.getenv("DATABASE_FILE"))
+def __create_test_database():
+    template_db = os.path.join(PROJECT_ROOT, os.getenv("DATABASE_TEMPLATE_FILE"))
+    db_path = os.path.join(PROJECT_ROOT, os.getenv("DATABASE_FILE"))
     shutil.copyfile(template_db, db_path)
 
-    return db_fd, db_path
+    return db_path

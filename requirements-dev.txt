@@ -1,4 +1,7 @@
 -r requirements.txt
 
-pytest
+# database reflect
 sqlacodegen
+
+# testing frameworks
+pytest

@@ -1,18 +1,24 @@
 from flask import current_app, jsonify, make_response, request
 from werkzeug.exceptions import NotFound
 
-from sandbox.persistence.orm.database import db_session
+from sandbox.domain.repositories.errors import RecordNotFoundException
+
 from sandbox.persistence.orm.models import Album
+from sandbox.persistence.orm.repositories.albums import SqlAlchemyAlbumRepository
 from sandbox.protocol.web.serializers import serialize
 
 
 def index():
-    albums = db_session.query(Album).all()
+    repository = SqlAlchemyAlbumRepository()
+
+    albums = repository.find()
     return jsonify(albums=serialize(albums, as_list=True))
 
 
 def show(id):
-    album = db_session.query(Album).filter_by(id=id).first()
+    repository = SqlAlchemyAlbumRepository()
+
+    album = repository.get(id)
     if album:
         return jsonify(album=serialize(album))
 
@@ -20,17 +26,20 @@ def show(id):
 
 
 def create():
+    repository = SqlAlchemyAlbumRepository()
+
     album_params = request.get_json()["album"]
 
     album = Album(**album_params)
-    db_session.add(album)
-    db_session.commit()
+    repository.add(album)
 
     return jsonify(album=serialize(album))
 
 
 def update(id):
-    album = db_session.query(Album).filter_by(id=id).first()
+    repository = SqlAlchemyAlbumRepository()
+
+    album = repository.get(id)
     if album:
         album_params = request.get_json()["album"]
         for field, value in album_params.items():
@@ -43,12 +52,13 @@ def update(id):
 
 
 def delete(id):
-    album = db_session.query(Album).filter_by(id=id).first()
-    if album:
-        db_session.delete(album)
+    repository = SqlAlchemyAlbumRepository()
+
+    try:
+        repository.remove(id)
 
         response = make_response('', 204)
         response.mimetype = current_app.config['JSONIFY_MIMETYPE']
         return response
-
-    raise NotFound(description=f"Could not find album with id {id}.")
+    except RecordNotFoundException:
+        raise NotFound(description=f"Could not find album with id {id}.")

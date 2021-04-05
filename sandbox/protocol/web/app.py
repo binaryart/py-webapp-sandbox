@@ -1,11 +1,7 @@
 from flask import Flask
 
-from sandbox.initializers import database
-from sandbox.lib.flask_ext import errors
-from sandbox.lib.flask_ext import resources
-from sandbox.resources import health
-
-from sandbox.resources import albums, album_songs
+from sandbox.protocol.web.flask_hooks import database, errors, resources
+from sandbox.protocol.web.resources import albums, album_songs, health
 
 
 def create_app():

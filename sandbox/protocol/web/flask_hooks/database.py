@@ -1,5 +1,5 @@
 from werkzeug.exceptions import InternalServerError
-from sandbox.database import db_session
+from sandbox.persistence.database import db_session
 
 
 def init(flask_app):

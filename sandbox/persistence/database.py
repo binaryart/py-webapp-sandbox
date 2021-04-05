@@ -15,5 +15,4 @@ Base.query = db_session.query_property()
 
 
 def init_db():
-    import sandbox.models
     Base.metadata.create_all(bind=engine)

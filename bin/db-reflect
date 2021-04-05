@@ -15,7 +15,7 @@ sys.path.append(PROJECT_ROOT)
 
 
 def run():
-    from sandbox.database import engine
+    from sandbox.persistence.database import engine
 
     metadata = MetaData(engine)
     metadata.reflect(bind=engine)

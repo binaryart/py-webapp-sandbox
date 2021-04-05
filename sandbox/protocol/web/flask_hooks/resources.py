@@ -1,6 +1,16 @@
 from dataclasses import dataclass
 
 
+def register(flask_app, base_uri, resource_module, member_path_rule="<int:id>"):
+    for action in __ALLOWED_ACTIONS:
+        if hasattr(resource_module, action.name):
+            rule = action.rule_for(base_uri, member_path_rule)
+            endpoint = action.endpoint_for(base_uri)
+            view_func = getattr(resource_module, action.name)
+
+            flask_app.add_url_rule(rule, endpoint, view_func, methods=[action.http_method])
+
+
 @dataclass
 class __Action:
     name: str
@@ -33,13 +43,3 @@ DELETE_ACTION = __Action(name="delete", http_method="DELETE", is_member=True)
 
 
 __ALLOWED_ACTIONS = [INDEX_ACTION, SHOW_ACTION, CREATE_ACTION, UPDATE_ACTION, DELETE_ACTION]
-
-
-def register(flask_app, base_uri, resource_module, member_path_rule="<int:id>"):
-    for action in __ALLOWED_ACTIONS:
-        if hasattr(resource_module, action.name):
-            rule = action.rule_for(base_uri, member_path_rule)
-            endpoint = action.endpoint_for(base_uri)
-            view_func = getattr(resource_module, action.name)
-
-            flask_app.add_url_rule(rule, endpoint, view_func, methods=[action.http_method])

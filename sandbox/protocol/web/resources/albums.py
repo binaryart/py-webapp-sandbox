@@ -1,9 +1,9 @@
 from flask import current_app, jsonify, make_response, request
 from werkzeug.exceptions import NotFound
 
-from sandbox.database import db_session
-from sandbox.models import Album
-from sandbox.serializers import serialize
+from sandbox.persistence.database import db_session
+from sandbox.persistence.models import Album
+from sandbox.protocol.web.serializers import serialize
 
 
 def index():

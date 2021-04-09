@@ -1,7 +1,7 @@
 from flask import current_app, jsonify, make_response, request
-from shortuuid import uuid
 from werkzeug.exceptions import NotFound
 
+from sandbox.domain.models import generate_guid
 from sandbox.domain.models.album import Album
 from sandbox.domain.repositories.errors import RecordNotFoundException
 from sandbox.persistence.orm.repositories.albums import SqlAlchemyAlbumRepository
@@ -29,7 +29,7 @@ def create():
     repository = SqlAlchemyAlbumRepository()
 
     album_params = request.get_json()["album"]
-    album_params["guid"] = uuid()
+    album_params["guid"] = generate_guid()
 
     album = Album(**album_params)
     repository.add(album)

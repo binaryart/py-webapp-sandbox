@@ -7,17 +7,16 @@ from sandbox.persistence.orm.database import db_session
 class SqlAlchemyAlbumRepository(AlbumRepository):
     def add(self, album):
         db_session.add(album)
-        db_session.commit()
 
-    def remove(self, id):
-        album = self.get(id)
+    def remove(self, guid):
+        album = self.get(guid)
         if album:
             db_session.delete(album)
         else:
             raise RecordNotFoundException()
 
-    def get(self, id):
-        return db_session.query(Album).filter_by(id=id).first()
+    def get(self, guid):
+        return db_session.query(Album).filter_by(guid=guid).first()
 
     def find(self):
         return db_session.query(Album).all()

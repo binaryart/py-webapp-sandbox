@@ -20,6 +20,7 @@ def upgrade():
     op.create_table(
         "albums",
         sa.Column("id", sa.Integer, primary_key=True, autoincrement=True),
+        sa.Column("guid", sa.String(32), unique=True),
         sa.Column("name", sa.String(255), nullable=False),
         sa.Column("artist", sa.String(255), nullable=False),
     )

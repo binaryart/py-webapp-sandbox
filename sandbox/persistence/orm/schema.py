@@ -8,6 +8,7 @@ mapper_registry = registry()
 t_albums = Table(
     'albums', mapper_registry.metadata,
     Column('id', Integer, primary_key=True),
+    Column('guid', String(32), unique=True),
     Column('name', String(255), nullable=False),
     Column('artist', String(255), nullable=False)
 )
@@ -16,6 +17,7 @@ t_albums = Table(
 t_songs = Table(
     'songs', mapper_registry.metadata,
     Column('id', Integer, primary_key=True),
+    Column('guid', String(32), unique=True),
     Column('name', String(255), nullable=False),
     Column('album_id', ForeignKey('albums.id'), nullable=False)
 )

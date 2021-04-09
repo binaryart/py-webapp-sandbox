@@ -1,17 +1,19 @@
-from pydantic_sqlalchemy import sqlalchemy_to_pydantic
-
-
 def serialize(content, as_list=False):
     if as_list and not content:
         return []
 
-    orm_model = content[0] if as_list else content
-    serializer = sqlalchemy_to_pydantic(orm_model.__class__)
-
     if as_list:
         return [
-            serializer.from_orm(element).dict()
+            _to_dict(element)
             for element in content
         ]
     else:
-        return serializer.from_orm(content).dict()
+        return _to_dict(content)
+
+
+def _to_dict(element):
+    return {
+        k: v
+        for k, v in element.__dict__.items()
+        if k[0] != "_"
+    }

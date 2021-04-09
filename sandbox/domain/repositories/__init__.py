@@ -7,11 +7,11 @@ class Repository(ABC):
         pass
 
     @abstractmethod
-    def remove(self, id):
+    def remove(self, guid):
         pass
 
     @abstractmethod
-    def get(self, id):
+    def get(self, guid):
         pass
 
     @abstractmethod

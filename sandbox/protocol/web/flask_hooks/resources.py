@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-def register(flask_app, base_uri, resource_module, member_path_rule="<int:id>"):
+def register(flask_app, base_uri, resource_module, member_path_rule="<string:guid>"):
     for action in __ALLOWED_ACTIONS:
         if hasattr(resource_module, action.name):
             rule = action.rule_for(base_uri, member_path_rule)

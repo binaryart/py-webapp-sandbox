@@ -18,6 +18,6 @@ def create_app():
 
     # Domain Resource endpoints(s)
     resources.register(app, "albums", albums)
-    resources.register(app, "albums/<int:album_id>/songs", album_songs)
+    resources.register(app, "albums/<string:album_guid>/songs", album_songs)
 
     return app

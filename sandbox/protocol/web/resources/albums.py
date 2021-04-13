@@ -3,7 +3,6 @@ from werkzeug.exceptions import NotFound
 
 from sandbox.domain.models import generate_guid
 from sandbox.domain.models.album import Album
-from sandbox.domain.repositories.errors import RecordNotFoundException
 from sandbox.persistence.orm.repositories.albums import SqlAlchemyAlbumRepository
 from sandbox.protocol.web.serializers import serialize
 
@@ -55,11 +54,8 @@ def update(guid):
 def delete(guid):
     repository = SqlAlchemyAlbumRepository()
 
-    try:
-        repository.remove(guid)
+    repository.remove(guid)
 
-        response = make_response('', 204)
-        response.mimetype = current_app.config['JSONIFY_MIMETYPE']
-        return response
-    except RecordNotFoundException:
-        raise NotFound(description=f"Could not find album with guid {guid}.")
+    response = make_response('', 204)
+    response.mimetype = current_app.config['JSONIFY_MIMETYPE']
+    return response

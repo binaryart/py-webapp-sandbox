@@ -14,7 +14,7 @@ def client():
     db_path = __create_test_database()
     os.environ["DATABASE_URL"] = f"sqlite:///{db_path}"
 
-    from sandbox.app import create_app
+    from sandbox.protocol.web.app import create_app
 
     app = create_app()
     with app.test_client() as client:

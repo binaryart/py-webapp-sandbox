@@ -11,7 +11,7 @@ sys.path.append(PROJECT_ROOT)
 
 
 def run():
-    from sandbox.app import create_app
+    from sandbox.protocol.web.app import create_app
 
     app = create_app()
     app.run()

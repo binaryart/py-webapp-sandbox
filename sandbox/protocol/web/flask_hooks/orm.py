@@ -1,8 +1,11 @@
 from werkzeug.exceptions import InternalServerError
-from sandbox.database import db_session
+from sandbox.persistence.orm.database import db_session
 
 
 def init(flask_app):
+    from sandbox.persistence.orm import mappers
+    _ = mappers  # suppress unused import warning and not let linters remove mappers invocation
+
     flask_app.after_request(__commit_request_transaction)
     flask_app.teardown_appcontext(__shutdown_session)
 

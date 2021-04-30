@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+set -o allexport; source .env.development; set +o allexport
+
+
+echo "[ bin/routes ] Printing app routes"
+FLASK_APP=sandbox.protocol.web.app flask routes
